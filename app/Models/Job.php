@@ -14,8 +14,13 @@ class Job extends Model
     protected $table = 'job_listings';
 
     // This relationship tells Eloquent that a Job belongs to an Employer
-    public function employer(): BelongsTo
+    public function employer()
     {
         return $this->belongsTo(Employer::class);
+    }
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class, foreignPivotKey: "job_listing_id");
     }
 }

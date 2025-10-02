@@ -1,6 +1,6 @@
 <x-layout>
     <x-slot:heading>
-        Job Details
+        <h2>Jobs Details</h2>
     </x-slot:heading>
 
     <div class="bg-white/5 p-8 rounded-xl max-w-4xl mx-auto border border-purple-500/50">
