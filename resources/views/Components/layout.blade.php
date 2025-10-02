@@ -53,6 +53,12 @@
                         <li>
                             <x-nav-link href="/jobs" :active="request()->is('jobs')">Jobs</x-nav-link>
                         </li>
+                        <li>
+                            <x-nav-link href="/about" :active="request()->is('about')">About</x-nav-link>
+                        </li>
+                        <li>
+                            <x-nav-link href="/contact" :active="request()->is('contact')">Contact</x-nav-link>
+                        </li>
                     </ul>
                 </nav>
                 
@@ -70,16 +76,34 @@
         </div>
     </header>
 
+
+    {{-- Interactive Notification --}}
+    <div class="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-md px-4">
+        @if (session('success'))
+            <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show"
+                x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0 -translate-y-4"
+                x-transition:enter-end="opacity-100 translate-y-0"
+                x-transition:leave="transition ease-in duration-200"
+                x-transition:leave-start="opacity-100 translate-y-0"
+                x-transition:leave-end="opacity-0 -translate-y-4"
+                class="bg-green-600/90 text-white px-6 py-4 rounded-lg shadow-lg flex items-center space-x-3">
+                <svg class="h-6 w-6 text-green-200" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                <span class="font-semibold">{{ session('success') }}</span>
+            </div>
+        @endif
+    </div>
+
     <main class="container mx-auto p-6 sm:p-12">
-         
         {{-- Named Slot: Heading (for page titles/banners) --}}
         <section class="text-center py-12 sm:py-24 text-5xl font-black tracking-tighter">
-        {{ $heading }}
-       </section>
+            {{ $heading }}
+        </section>
 
         {{-- Default Slot: Main Content --}}
         {{ $slot }}
-         
     </main>
 
     <footer class="mt-12 p-4 text-center border-t border-purple-700/50">
@@ -87,4 +111,5 @@
     </footer>
 
 </body>
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </html>

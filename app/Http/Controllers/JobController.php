@@ -11,27 +11,74 @@ use Illuminate\Validation\Rule;
 
 class JobController extends Controller
 {
-    // Assuming index(), create(), store(), and show() methods are here...
-    // ...
+    /**
+     * Display a listing of jobs.
+     */
+    public function index()
+    {
+    $jobs = Job::with(['employer', 'tags'])->paginate(2);
+        return view('jobs.index', ['jobs' => $jobs]);
+    }
+
+    /**
+     * Show the form for creating a new job.
+     */
+    public function create()
+    {
+        return view('jobs.create', [
+            'employers' => Employer::all(),
+            'tags' => Tag::all()->sortBy('name')
+        ]);
+    }
+
+    /**
+     * Store a newly created job in storage.
+     */
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'title' => ['required', 'min:3', 'max:255'],
+            'salary' => ['required', 'numeric', 'min:0'],
+            'employer_id' => ['required', Rule::exists('employers', 'id')],
+            'description' => ['nullable', 'string'],
+            'tags' => ['nullable', 'array'],
+            'tags.*' => [Rule::exists('tags', 'id')]
+        ]);
+
+        $job = Job::create([
+            'title' => $validated['title'],
+            'salary' => $validated['salary'],
+            'employer_id' => $validated['employer_id'],
+            'description' => $validated['description'] ?? null,
+            'user_id' => Auth::id(), // attach job to logged-in user
+        ]);
+
+        if (!empty($validated['tags'])) {
+            $job->tags()->attach($validated['tags']);
+        }
+
+        return redirect()->route('jobs.index')->with('success', 'Job created successfully!');
+    }
+
+    /**
+     * Display the specified job.
+     */
+    public function show(Job $job)
+    {
+        return view('jobs.show', ['job' => $job]);
+    }
 
     /**
      * Show the form for editing the specified job.
      */
     public function edit(Job $job)
     {
-        // AUTHORIZATION CHECK: Ensure the logged-in user owns this job
-        if (!Auth::check() || Auth::user()->id !== $job->user_id) {
-            abort(403); // Forbidden
-        }
-        
-        // Fetch necessary data
-        $employers = Employer::all(); 
-        $tags = Tag::all()->sortBy('name'); // Fetch all available tags for the checkbox list
+
 
         return view('jobs.edit', [
             'job' => $job,
-            'employers' => $employers,
-            'tags' => $tags // Pass tags to the view
+            'employers' => Employer::all(),
+            'tags' => Tag::all()->sortBy('name')
         ]);
     }
 
@@ -40,36 +87,29 @@ class JobController extends Controller
      */
     public function update(Request $request, Job $job)
     {
-        // AUTHORIZATION CHECK: Ensure the logged-in user owns this job
-        if (!Auth::check() || Auth::user()->id !== $job->user_id) {
-            abort(403); // Forbidden
-        }
-        
-        // 1. Validate the incoming data (Updated for description and array tags)
-        $validatedAttributes = $request->validate([
+
+
+        $validated = $request->validate([
             'title' => ['required', 'min:3'],
-            'salary' => ['required', 'numeric', 'min:0'], 
+            'salary' => ['required', 'numeric', 'min:0'],
             'employer_id' => ['required', Rule::exists('employers', 'id')],
-            'description' => ['nullable', 'string'], // New field validation
-            'tags' => ['nullable', 'array'], // Expect an array of tag IDs
-            'tags.*' => ['nullable', Rule::exists('tags', 'id')], // Ensure each ID is a valid tag
+            'description' => ['nullable', 'string'],
+            'tags' => ['nullable', 'array'],
+            'tags.*' => [Rule::exists('tags', 'id')],
         ]);
 
-        // 2. Update the job record
-        // FIX: Excluding 'tags' from mass assignment
-        $job->update($request->except('tags'));
-        
-        // 3. Handle tags update (using array of IDs)
-        if ($request->has('tags')) {
-            // sync() is used here to update: detach old tags, attach new ones based on the array of IDs
-            $job->tags()->sync($request->input('tags')); 
-        } else {
-            // If no checkboxes were checked, detach all existing tags
-            $job->tags()->detach();
+
+        $job->update($validated);
+
+        if (array_key_exists('tags', $validated)) {
+            if (!empty($validated['tags'])) {
+                $job->tags()->sync($validated['tags']);
+            } else {
+                $job->tags()->detach();
+            }
         }
 
-        // 4. Redirect the user back to the job's detail page
-        return redirect('/jobs/' . $job->id)->with('success', 'Job updated successfully!');
+        return redirect()->route('jobs.show', $job)->with('success', 'Job updated successfully!');
     }
 
     /**
@@ -77,15 +117,10 @@ class JobController extends Controller
      */
     public function destroy(Job $job)
     {
-        // AUTHORIZATION CHECK: Ensure the logged-in user owns this job
-        if (!Auth::check() || Auth::user()->id !== $job->user_id) {
-            abort(403); // Forbidden
-        }
-        
-        // Delete the job from the database
+
+
         $job->delete();
 
-        // Redirect the user back to the main jobs list
-        return redirect('/jobs')->with('success', 'Job deleted successfully!');
+        return redirect()->route('jobs.index')->with('success', 'Job deleted successfully!');
     }
 }

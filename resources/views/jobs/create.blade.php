@@ -66,11 +66,17 @@
 
             {{-- Input Group 2: Tags --}}
             <div class="pt-4 border-t border-purple-600/50">
-                <label for="tags" class="block text-sm font-medium text-purple-300">Tags (Comma Separated)</label>
-                <p class="text-xs text-purple-400 mb-2">Help applicants find your job with relevant keywords (e.g., laravel, remote, php).</p>
-                <input type="text" name="tags" id="tags" value="{{ old('tags') }}"
-                    class="mt-1 block w-full rounded-lg border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-purple-500/50 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-purple-400 sm:text-sm bg-purple-100/90 transition duration-150"
-                    placeholder="e.g., laravel, remote, php, full-stack">
+                <label class="block text-sm font-medium text-purple-300 mb-2">Tags</label>
+                <p class="text-xs text-purple-400 mb-2">Select one or more tags for this job.</p>
+                <div class="flex flex-wrap gap-3">
+                    @foreach ($tags as $tag)
+                        <label class="inline-flex items-center space-x-2 bg-purple-100/70 rounded px-2 py-1">
+                            <input type="checkbox" name="tags[]" value="{{ $tag->id }}" class="accent-purple-600"
+                                {{ collect(old('tags', []))->contains($tag->id) ? 'checked' : '' }}>
+                            <span class="text-purple-700 text-sm">{{ $tag->name }}</span>
+                        </label>
+                    @endforeach
+                </div>
                 @error('tags')
                     <p class="text-xs text-red-400 font-semibold mt-1">{{ $message }}</p>
                 @enderror

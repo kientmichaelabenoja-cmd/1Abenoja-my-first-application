@@ -18,13 +18,13 @@ Edit Job: {{ $job->title }}
         @csrf
         @method('PATCH') 
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             {{-- Job Title --}}
-            <div class="md:col-span-2">
+            <div class="col-span-1 md:col-span-2">
                 <label for="title" class="block text-sm font-medium text-purple-300">Job Title</label>
-                <input type="text" name="title" id="title" 
-                    value="{{ old('title', $job->title) }}" {{-- Populated with existing data --}}
+                <input type="text" name="title" id="title"
+                    value="{{ old('title', $job->title) }}"
                     class="mt-1 block w-full rounded-lg border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-purple-500/50 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-purple-400 sm:text-sm bg-purple-100/90 transition duration-150"
                     required>
                 @error('title')
@@ -33,10 +33,10 @@ Edit Job: {{ $job->title }}
             </div>
 
             {{-- Salary --}}
-            <div>
+            <div class="col-span-1">
                 <label for="salary" class="block text-sm font-medium text-purple-300">Salary (Annual)</label>
-                <input type="text" name="salary" id="salary" 
-                    value="{{ old('salary', $job->salary) }}" {{-- Populated with existing data --}}
+                <input type="text" name="salary" id="salary"
+                    value="{{ old('salary', $job->salary) }}"
                     class="mt-1 block w-full rounded-lg border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-purple-500/50 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-purple-400 sm:text-sm bg-purple-100/90 transition duration-150"
                     required>
                 @error('salary')
@@ -45,12 +45,12 @@ Edit Job: {{ $job->title }}
             </div>
 
             {{-- Employer Selection --}}
-            <div>
+            <div class="col-span-1">
                 <label for="employer_id" class="block text-sm font-medium text-purple-300">Employer</label>
                 <select name="employer_id" id="employer_id" required
                     class="mt-1 block w-full rounded-lg border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-purple-500/50 focus:ring-2 focus:ring-inset focus:ring-purple-400 sm:text-sm bg-purple-100/90 transition duration-150">
                     @foreach ($employers as $employer)
-                        <option value="{{ $employer->id }}" 
+                        <option value="{{ $employer->id }}"
                             {{ old('employer_id', $job->employer_id) == $employer->id ? 'selected' : '' }}>
                             {{ $employer->name }}
                         </option>
@@ -60,16 +60,22 @@ Edit Job: {{ $job->title }}
                     <p class="text-xs text-red-400 font-semibold mt-1">{{ $message }}</p>
                 @enderror
             </div>
+
         </div>
 
         
         <div class="pt-4 border-t border-purple-600/50">
-            <label for="tags" class="block text-sm font-medium text-purple-300">Tags (Comma Separated)</label>
-            <p class="text-xs text-purple-400 mb-2">Help applicants find your job with relevant keywords.</p>
-            <input type="text" name="tags" id="tags" 
-                value="{{ old('tags', $job->tags->pluck('name')->implode(', ')) }}" {{-- Populated with existing tags --}}
-                class="mt-1 block w-full rounded-lg border-0 py-2.5 text-gray-900 shadow-sm ring-1 ring-inset ring-purple-500/50 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-purple-400 sm:text-sm bg-purple-100/90 transition duration-150"
-                placeholder="e.g., laravel, remote, php, full-stack">
+            <label class="block text-sm font-medium text-purple-300 mb-2">Tags</label>
+            <p class="text-xs text-purple-400 mb-2">Select one or more tags for this job.</p>
+            <div class="flex flex-wrap gap-3">
+                @foreach ($tags as $tag)
+                    <label class="inline-flex items-center space-x-2 bg-purple-100/70 rounded px-2 py-1">
+                        <input type="checkbox" name="tags[]" value="{{ $tag->id }}" class="accent-purple-600"
+                            {{ collect(old('tags', $job->tags->pluck('id')->toArray()))->contains($tag->id) ? 'checked' : '' }}>
+                        <span class="text-purple-700 text-sm">{{ $tag->name }}</span>
+                    </label>
+                @endforeach
+            </div>
             @error('tags')
                 <p class="text-xs text-red-400 font-semibold mt-1">{{ $message }}</p>
             @enderror
@@ -91,15 +97,18 @@ Edit Job: {{ $job->title }}
         </div>
     </form>
 
-    <form method="POST" action="/jobs/{{ $job->id }}" class="mt-4">
-        @csrf
-        @method('DELETE')
-        <button type="submit"
-            onclick="return confirm('Are you sure you want to delete this job? This action cannot be undone.')"
-            class="inline-flex items-center text-sm font-medium text-red-400 hover:text-red-500 transition duration-150 ease-in-out">
-            Delete Job
-        </button>
-    </form>
+    <div class="mt-8 flex justify-end">
+        <form method="POST" action="/jobs/{{ $job->id }}">
+            @csrf
+            @method('DELETE')
+            <button type="submit"
+                onclick="return confirm('Are you sure you want to delete this job? This action cannot be undone.')"
+                class="group relative flex items-center px-6 py-3 bg-red-50 border border-red-200 rounded-lg shadow hover:bg-red-600 transition duration-200">
+                <span class="text-red-500 group-hover:text-white font-semibold transition duration-200">Delete Job</span>
+                <span class="absolute inset-0 rounded-lg group-hover:border-2 group-hover:border-white pointer-events-none"></span>
+            </button>
+        </form>
+    </div>
 </div>
 
 </x-layout>

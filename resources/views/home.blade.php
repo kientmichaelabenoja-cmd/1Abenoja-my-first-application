@@ -1,13 +1,13 @@
 <x-layout>
-    <x-slot:heading>
-        <h2 class="text-5xl sm:text-6xl font-black mb-4 tracking-tighter">
-            Your Next Cosmic Opportunity Awaits
-        </h2>
-        <p class="text-xl text-purple-500 max-w-3xl mx-auto mb-1">
-         Discover the most interesting roles across the digital universe. Start your journey with CosMoJobsFinds today.
-        </p>
 
-     </x-slot:heading>
+    <x-slot:heading>
+        <div class="flex flex-col items-center justify-center text-center">
+            <h2 class="text-5xl sm:text-6xl font-black mb-4 tracking-tighter min-h-[3.5rem]" x-data="{ text: '', full: 'Your Next Cosmic Opportunity Awaits', i: 0 }" x-init="let interval = setInterval(() => { if (i < full.length) { text += full[i++]; } else { clearInterval(interval); } }, 50)" x-text="text"></h2>
+            <p class="text-xl text-purple-500 max-w-3xl mx-auto mb-8">
+                Discover the most interesting roles across the digital universe. Start your journey with CosMoJobsFinds today.
+            </p>
+        </div>
+    </x-slot:heading>
 
      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
     <div class="bg-white/5 backdrop-blur-sm p-6 rounded-xl border border-purple-500/30 text-center transition duration-300 hover:scale-[1.02] hover:bg-white/10">
