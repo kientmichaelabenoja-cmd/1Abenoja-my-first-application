@@ -3,13 +3,10 @@
         <h2 class="text-5xl sm:text-6xl font-black mb-4 tracking-tighter">
             Your Next Cosmic Opportunity Awaits
         </h2>
-        <p class="text-xl text-purple-300 max-w-3xl mx-auto mb-8">
-            Discover the most interesting roles across the digital universe. Start your journey with CosMoJobsFinds today.
+        <p class="text-xl text-purple-500 max-w-3xl mx-auto mb-1">
+         Discover the most interesting roles across the digital universe. Start your journey with CosMoJobsFinds today.
         </p>
-        <button class="px-8 py-3 text-lg font-semibold bg-purple-600 hover:bg-purple-700 rounded-lg shadow-lg transition duration-300 
-                        hover:shadow-purple-500/50 transform hover:scale-105">
-            Explore Jobs
-        </button>
+
      </x-slot:heading>
 
      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">

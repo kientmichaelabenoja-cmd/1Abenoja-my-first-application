@@ -68,7 +68,7 @@
     </main>
 
     <footer class="mt-12 p-4 text-center border-t border-purple-700/50">
-        <p class="text-sm text-purple-400">&copy; 2024 CosMoJobsFinds. All rights reserved, somewhere in the cosmos.</p>
+        <p class="text-sm text-purple-400">&copy; 2025 CosMoJobsFinds. All rights reserved, somewhere in the cosmos.</p>
     </footer>
 
 </body>
