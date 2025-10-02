@@ -1,5 +1,4 @@
 <x-layout>
-    {{-- Named Slot for the Heading --}}
     <x-slot:heading>
         <h2 class="text-5xl sm:text-6xl font-black mb-4 tracking-tighter">
             Your Next Cosmic Opportunity Awaits

@@ -38,31 +38,28 @@
             
             <div class="mb-4 sm:mb-0">
                 <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight glow-text cursor-pointer">
-                    CosMoJobsFinds
+                    CosMoJobFinds
                 </h1>
             </div>
 
             <nav>
-                <ul class="flex space-x-6 sm:space-x-10">
-                    <li>
-                        <x-nav-link href="/" :active="request()->is('/')">Home</x-nav-link>
-                    </li>
-                    <li>
-                        <x-nav-link href="/about" :active="request()->is('about')">About</x-nav-link>
-                    </li>
-                    <li>
-                        <x-nav-link href="/contact" :active="request()->is('contact')">Contact</x-nav-link>
-                    </li>
-                </ul>
-            </nav>
+    <ul class="flex space-x-6 sm:space-x-10">
+        <li>
+            <x-nav-link href="/" :active="request()->is('/')">Home</x-nav-link>
+        </li>
+        <li>
+            <x-nav-link href="/jobs" :active="request()->is('jobs')">Jobs</x-nav-link>
+        </li>
+    </ul>
+</nav>
         </div>
     </header>
 
     <main class="container mx-auto p-6 sm:p-12">
         
         {{-- Named Slot: Heading (for page titles/banners) --}}
-        <section class="text-center py-12 sm:py-24">
-         {{ $heading }} 
+        <section class="text-center py-12 sm:py-24 text-5xl font-black tracking-tighter">
+        {{ $heading }}
        </section>
 
         {{-- Default Slot: Main Content --}}
