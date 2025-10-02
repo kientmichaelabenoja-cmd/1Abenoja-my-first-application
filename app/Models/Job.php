@@ -2,46 +2,20 @@
 
 namespace App\Models;
 
-use Illuminate\Support\Arr;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Job
+// This class now extends Model, making it an Eloquent Model
+class Job extends Model
 {
-    // Method to return all hardcoded jobs
-    public static function all()
+    // Tells Eloquent to use the job_listings table (since it's not 'jobs')
+    use HasFactory;
+    protected $table = 'job_listings';
+
+    // This relationship tells Eloquent that a Job belongs to an Employer
+    public function employer(): BelongsTo
     {
-        return [
-            [
-                'id' => 1,
-                'title' => 'Director',
-                'salary' => '$50,000'
-            ],
-            [
-                'id' => 2,
-                'title' => 'Programmer',
-                'salary' => '$10,000'
-            ],
-            [
-                'id' => 3,
-                'title' => 'Teacher',
-                'salary' => '$40,000'
-            ]
-        ];
-    }
-
-    // Method to find a single job by its ID
-    public static function find($id)
-    {
-        // Get all jobs
-        $jobs = static::all();
-
-        // Search the array for a job where the 'id' matches the requested $id
-        $job = Arr::first($jobs, fn($job) => $job['id'] == $id);
-
-        // If no job is found, abort the request and show a 404 page
-        if (! $job) {
-            abort(404);
-        }
-        
-        return $job;
+        return $this->belongsTo(Employer::class);
     }
 }
