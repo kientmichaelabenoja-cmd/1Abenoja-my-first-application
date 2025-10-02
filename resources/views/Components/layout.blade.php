@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $heading ?? 'CosMoJobsFinds - Simple Homepage' }}</title>
-    
+     
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Define a custom font */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-        
+         
         body {
             font-family: 'Inter', sans-serif;
             /* Dark Purple Gradient Background */
@@ -34,29 +34,44 @@
 <body class="text-white antialiased">
 
     <header class="p-4 sm:p-6 shadow-xl border-b border-purple-700/50">
-        <div class="container mx-auto flex flex-col sm:flex-row justify-between items-center">
-            
+        {{-- The main container is now a flex container that holds the logo, nav, and button --}}
+        <div class="container mx-auto flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
+             
             <div class="mb-4 sm:mb-0">
                 <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight glow-text cursor-pointer">
                     CosMoJobFinds
                 </h1>
             </div>
-
-            <nav>
-    <ul class="flex space-x-6 sm:space-x-10">
-        <li>
-            <x-nav-link href="/" :active="request()->is('/')">Home</x-nav-link>
-        </li>
-        <li>
-            <x-nav-link href="/jobs" :active="request()->is('jobs')">Jobs</x-nav-link>
-        </li>
-    </ul>
-</nav>
+            
+            {{-- Wrapper for the Navigation and the new Button --}}
+            <div class="flex items-center space-x-6 sm:space-x-10">
+                <nav>
+                    <ul class="flex space-x-6">
+                        <li>
+                            <x-nav-link href="/" :active="request()->is('/')">Home</x-nav-link>
+                        </li>
+                        <li>
+                            <x-nav-link href="/jobs" :active="request()->is('jobs')">Jobs</x-nav-link>
+                        </li>
+                    </ul>
+                </nav>
+                
+                {{-- NEW "Create Job" BUTTON --}}
+                <a href="/jobs/create" 
+                   class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-lg 
+                          text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 
+                          focus:ring-offset-2 focus:ring-purple-500 transition duration-150 ease-in-out 
+                          transform hover:scale-105"
+                >
+                    Create 
+                </a>
+                
+            </div>
         </div>
     </header>
 
     <main class="container mx-auto p-6 sm:p-12">
-        
+         
         {{-- Named Slot: Heading (for page titles/banners) --}}
         <section class="text-center py-12 sm:py-24 text-5xl font-black tracking-tighter">
         {{ $heading }}
@@ -64,7 +79,7 @@
 
         {{-- Default Slot: Main Content --}}
         {{ $slot }}
-        
+         
     </main>
 
     <footer class="mt-12 p-4 text-center border-t border-purple-700/50">

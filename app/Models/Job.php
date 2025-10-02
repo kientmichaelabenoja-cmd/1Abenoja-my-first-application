@@ -13,6 +13,12 @@ class Job extends Model
     use HasFactory;
     protected $table = 'job_listings';
 
+     protected $fillable = [
+        'title',
+        'salary',
+        'employer_id',
+    ];
+
     // This relationship tells Eloquent that a Job belongs to an Employer
     public function employer()
     {
